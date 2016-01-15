@@ -165,7 +165,111 @@ var rentalModifications = [{
   'pickupDate': '2015-12-05'
 }];
 
-console.log(cars);
+function PriceForDriver(cars, rentals, tabAct)
+{
+  for(var i=0; i<rentals.length; i++)
+  {
+      var idrent = rentals[i].carId;
+      var dist = rentals[i].distance;
+
+      for (var j=0; j<cars.length ; j++)
+      {
+        var idcar = cars[j].id;
+        var carPriceDay = cars[j].pricePerDay;
+        var carPriceKm = cars[j].pricePerKm;
+
+        if (idrent==idcar)
+        {
+          var time = NumberDay(rentals[i].pickupDate, rentals[i].returnDate)
+          
+          var priceDist = dist * carPriceKm;
+          var priceTime = 0;
+
+          for (var t=1; t<=time ; t++)
+          {
+            if (t==1)
+            {
+              priceTime = carPriceDay;
+
+            }
+            else if (t > 1 && t <5)
+              {
+                priceTime = 0.9 *carPriceDay;
+              }
+
+              else if(t > 4 && t <11)
+              {
+                priceTime = 0.7 *carPriceDay;
+              }    
+              else if(t>10)
+              {
+                priceTime = 0.5 *carPriceDay;
+              } 
+          }
+      }
+  }
+  var rentalPrice = priceTime *time + priceDist;
+  
+ rentals[i].price= rentalPrice;
+
+  var commiss = 0.3* rentalPrice;
+  var insu = commiss *0.5;
+  var assist= time;
+  var drivy = commiss - (insu+assist);
+
+  rentals[i].commission.insurance = insu;
+  rentals[i].commission.assistance = assist;
+  rentals[i].commission.drivy = drivy;
+
+  var deduct = 4 * time;
+
+  if (rentals[i].options.deductibleReduction== true)
+  rentals[i].price += deduct;
+
+for (var a = 0; a < tabAct.length; a++)
+  {
+    if (tabAct[a].rentalId == rentals[i].id)
+    {
+      for (var p=0; p < tabAct[a].payment.length; p++)
+      {
+        if (tabAct[a].payment[p].who == "driver")
+          tabAct[a].payment[p].amount = rentals[i].price;
+
+        else if (tabAct[a].payment[p].who == "owner")
+           tabAct[a].payment[p].amount = rentals[i].price -commiss;
+
+        else if (tabAct[a].payment[p].who == "insurance") 
+           tabAct[a].payment[p].amount = insu;
+
+        else if (tabAct[a].payment[p].who == "assistance")
+          tabAct[a].payment[p].amount = assist;
+
+        else if (tabAct[a].payment[p].who == "drivy")   
+         tabAct[a].payment[p].amount = drivy+ deduct;
+
+      }
+    }
+  }
+
+}
+}
+
+function NumberDay (date1, date2)
+{
+    var pickD = new Date(date1);
+    var returnD = new Date(date2);
+
+    return 1 + (returnD - pickD)/ (24* 3600 * 1000); 
+}
+
+function ActorsTransaction(tabAct)
+{
+  
+}
+
+//console.log(cars);
 console.log(rentals);
 console.log(actors);
-console.log(rentalModifications);
+//console.log(rentalModifications);
+
+PriceForDriver(cars, rentals, actors);
