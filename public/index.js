@@ -262,9 +262,31 @@ function NumberDay (date1, date2)
     return 1 + (returnD - pickD)/ (24* 3600 * 1000); 
 }
 
-function ActorsTransaction(tabAct)
+function ModifOfRentals(rentals, cars)
 {
-  
+  for(var m = 0; m < rentalModifications.length ; m++)
+  {
+
+    for(var r = 0 ; r < rentals.length ; r++)
+    {
+
+      if(rentals[r].id == rentals[m].rentalId )
+      {
+        if(rentalModifications[i].distance)
+          rentals[r].distance =  rentalModifications[m].distance; 
+        
+        if(rentalModifications[i].pickupDate)
+          rentals[r].pickupDate =  rentalModifications[m].pickupDate; 
+                  
+        if(rentalModifications[i].returnDate)
+          rentals[r].returnDate =  rentalModifications[m].returnDate; 
+        
+        if(rentalModifications[i].options)
+          rentals[r].options.deductibleReduction = rentalModifications[m].options.deductibleReduction; 
+
+      }                  
+    }
+  }                      
 }
 
 //console.log(cars);
@@ -273,3 +295,4 @@ console.log(actors);
 //console.log(rentalModifications);
 
 PriceForDriver(cars, rentals, actors);
+ModifOfRentals(rentals,cars);
